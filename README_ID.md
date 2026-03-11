@@ -25,6 +25,20 @@
 - 🌐 **Multi-bahasa** — Bahasa Inggris & Indonesia (Easy Localization)
 - 🔒 **100% Offline** — Tidak perlu koneksi internet, selamanya
 
+## Screenshot
+
+| Beranda | Beranda (Gelap) | Kamera |
+|---|---|---|
+| ![Beranda](images/aman-geh-home.png) | ![Beranda Gelap](images/aman-geh-home-dark.png) | ![Kamera](images/aman-geh-camera.png) |
+
+| Galeri | Hasil Editor 1 | Hasil Editor 2 |
+|---|---|---|
+| ![Galeri](images/aman-geh-gallery.png) | ![Hasil Editor 1](images/aman-geh-camera-result-1.png) | ![Hasil Editor 2](images/aman-geh-camera-result-2.png) |
+
+| Tentang | Pengaturan | Disclaimer |
+|---|---|---|
+| ![Tentang](images/aman-geh-about.png) | ![Pengaturan](images/aman-geh-setting.png) | ![Disclaimer](images/aman-geh-desclimer.png) |
+
 ## Arsitektur
 
 Proyek ini mengikuti pola **MVVM (Model-View-ViewModel)** dengan struktur berbasis fitur:

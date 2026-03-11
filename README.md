@@ -25,6 +25,20 @@
 - 🌐 **Multi-language** — English & Indonesian (Easy Localization)
 - 🔒 **100% Offline** — No internet connection required, ever
 
+## Screenshots
+
+| Home | Home (Dark) | Camera |
+|---|---|---|
+| ![Home](images/aman-geh-home.png) | ![Home Dark](images/aman-geh-home-dark.png) | ![Camera](images/aman-geh-camera.png) |
+
+| Gallery | Editor Result 1 | Editor Result 2 |
+|---|---|---|
+| ![Gallery](images/aman-geh-gallery.png) | ![Editor Result 1](images/aman-geh-camera-result-1.png) | ![Editor Result 2](images/aman-geh-camera-result-2.png) |
+
+| About | Settings | Disclaimer |
+|---|---|---|
+| ![About](images/aman-geh-about.png) | ![Settings](images/aman-geh-setting.png) | ![Disclaimer](images/aman-geh-desclimer.png) |
+
 ## Architecture
 
 This project follows the **MVVM (Model-View-ViewModel)** pattern with feature-driven structure:
