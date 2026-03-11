@@ -1,0 +1,29 @@
+name: aman_geh
+description: "Premium Identity Document Watermarker — Protect your identity, 100% offline."
+publish_to: 'none'
+version: 1.0.0
+
+environment:
+  sdk: ^3.10.8
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_riverpod:
+  go_router:
+  image_picker:
+  share_plus:
+  path_provider:
+  flutter_animate:
+  easy_localization:
+  shared_preferences:
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/translations/
