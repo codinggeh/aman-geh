@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 
 import '../../../core/image_engine/watermark_renderer.dart';
+import '../../../core/utils/pdf_helper.dart';
 import '../../../core/utils/share_helper.dart';
 import '../model/watermark_settings.dart';
 import 'local_image_datasource.dart';
@@ -18,10 +19,10 @@ class ImageRepository {
   final WatermarkRenderer _renderer;
 
   /// Capture from camera.
-  Future<Uint8List?> captureImage() => _datasource.captureFromCamera();
+  Future<List<Uint8List>> captureImage() => _datasource.captureFromCamera();
 
   /// Pick from gallery.
-  Future<Uint8List?> pickImage() => _datasource.pickFromGallery();
+  Future<List<Uint8List>> pickImage() => _datasource.pickFromGallery();
 
   /// Apply watermark to [sourceBytes] using [settings].
   Future<Uint8List> applyWatermark(
@@ -31,5 +32,12 @@ class ImageRepository {
       _renderer.render(sourceBytes, settings);
 
   /// Share directly via OS share sheet.
-  Future<void> shareImage(Uint8List bytes) => ShareHelper.shareImage(bytes);
+  Future<void> shareImages(List<Uint8List> bytesList) => ShareHelper.shareImages(bytesList);
+
+  /// Generate a PDF containing the given image bytes.
+  Future<Uint8List> generatePdf(List<Uint8List> imagesBytes, {int rotationDegrees = 0}) => 
+      PdfHelper.generatePdfFromImages(imagesBytes, rotationDegrees: rotationDegrees);
+
+  /// Share PDF via OS share sheet.
+  Future<void> sharePdf(Uint8List bytes) => ShareHelper.sharePdf(bytes);
 }

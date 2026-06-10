@@ -5,16 +5,17 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../data/image_repository.dart';
 
 /// ViewModel holding the in-memory source image bytes selected by the user.
-class SourceImageNotifier extends Notifier<Uint8List?> {
+class SourceImageNotifier extends Notifier<List<Uint8List>> {
   @override
-  Uint8List? build() => null;
+  List<Uint8List> build() => [];
 
-  void set(Uint8List? bytes) => state = bytes;
-  void clear() => state = null;
+  void set(List<Uint8List> bytes) => state = bytes;
+  void add(Uint8List bytes) => state = [...state, bytes];
+  void clear() => state = [];
 }
 
 /// Holds the in-memory source image bytes selected by the user.
-final sourceImageProvider = NotifierProvider<SourceImageNotifier, Uint8List?>(
+final sourceImageProvider = NotifierProvider<SourceImageNotifier, List<Uint8List>>(
   SourceImageNotifier.new,
 );
 

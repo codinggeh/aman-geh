@@ -26,7 +26,7 @@ class HomeScreen extends ConsumerWidget {
           ? await repo.captureImage()
           : await repo.pickImage();
 
-      if (bytes != null && context.mounted) {
+      if (bytes.isNotEmpty && context.mounted) {
         ref.read(sourceImageProvider.notifier).set(bytes);
         context.push('/editor');
       }

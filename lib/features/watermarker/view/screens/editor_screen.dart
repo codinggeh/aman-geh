@@ -18,17 +18,118 @@ class EditorScreen extends ConsumerStatefulWidget {
 
 class _EditorScreenState extends ConsumerState<EditorScreen> {
   Future<void> _exportAndShare() async {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) {
+        return SafeArea(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ListTile(
+                leading: const Icon(Icons.image),
+                title: const Text('Export as Image'),
+                onTap: () {
+                  Navigator.pop(context);
+                  _processAndShare(asPdf: false);
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.picture_as_pdf),
+                title: const Text('Export as PDF...'),
+                onTap: () {
+                  Navigator.pop(context);
+                  _showPdfOptions();
+                },
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  void _showPdfOptions() {
+    int rotation = 0;
+    showDialog(
+      context: context,
+      builder: (context) {
+        return StatefulBuilder(
+          builder: (context, setState) {
+            return AlertDialog(
+              title: const Text('PDF Options'),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Text('Page Rotation:'),
+                  RadioListTile<int>(
+                    title: const Text('0°'),
+                    value: 0,
+                    groupValue: rotation,
+                    onChanged: (v) => setState(() => rotation = v!),
+                  ),
+                  RadioListTile<int>(
+                    title: const Text('90°'),
+                    value: 90,
+                    groupValue: rotation,
+                    onChanged: (v) => setState(() => rotation = v!),
+                  ),
+                  RadioListTile<int>(
+                    title: const Text('180°'),
+                    value: 180,
+                    groupValue: rotation,
+                    onChanged: (v) => setState(() => rotation = v!),
+                  ),
+                  RadioListTile<int>(
+                    title: const Text('270°'),
+                    value: 270,
+                    groupValue: rotation,
+                    onChanged: (v) => setState(() => rotation = v!),
+                  ),
+                ],
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: const Text('Cancel'),
+                ),
+                FilledButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                    _processAndShare(asPdf: true, rotation: rotation);
+                  },
+                  child: const Text('Export'),
+                ),
+              ],
+            );
+          }
+        );
+      },
+    );
+  }
+
+  Future<void> _processAndShare({required bool asPdf, int rotation = 0}) async {
     final sourceBytes = ref.read(sourceImageProvider);
-    if (sourceBytes == null) return;
+    if (sourceBytes.isEmpty) return;
 
     final settings = ref.read(watermarkSettingsProvider);
     final repo = ref.read(imageRepositoryProvider);
     ref.read(isProcessingProvider.notifier).set(true);
 
     try {
-      final rendered = await repo.applyWatermark(sourceBytes, settings);
+      final renderedList = <Uint8List>[];
+      for (final bytes in sourceBytes) {
+        renderedList.add(await repo.applyWatermark(bytes, settings));
+      }
+      
       if (!mounted) return;
-      await repo.shareImage(rendered);
+      
+      if (asPdf) {
+        final pdfBytes = await repo.generatePdf(renderedList, rotationDegrees: rotation);
+        if (!mounted) return;
+        await repo.sharePdf(pdfBytes);
+      } else {
+        await repo.shareImages(renderedList);
+      }
     } catch (e) {
       if (!mounted) return;
       ScaffoldMessenger.of(
@@ -53,7 +154,7 @@ class _EditorScreenState extends ConsumerState<EditorScreen> {
     final theme = Theme.of(context);
     final cs = theme.colorScheme;
 
-    if (sourceBytes == null) {
+    if (sourceBytes.isEmpty) {
       return Scaffold(
         appBar: AppBar(title: Text('editor'.tr())),
         body: AuroraBackground(
@@ -82,9 +183,14 @@ class _EditorScreenState extends ConsumerState<EditorScreen> {
           const SizedBox(height: 12),
           SizedBox(
             height: 320,
-            child: InteractivePreview(
-              imageBytes: MemoryImage(sourceBytes),
-              settings: ref.watch(watermarkSettingsProvider),
+            child: PageView.builder(
+              itemCount: sourceBytes.length,
+              itemBuilder: (context, index) {
+                return InteractivePreview(
+                  imageBytes: MemoryImage(sourceBytes[index]),
+                  settings: ref.watch(watermarkSettingsProvider),
+                );
+              },
             ),
           ),
         ],
